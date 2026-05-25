@@ -1,0 +1,22 @@
+# Render Blueprint for the Flask backend.
+# Frontend deploys separately on Vercel; the database stays on MongoDB Atlas.
+# Deploy: push this repo to GitHub, then New + > Blueprint in the Render dashboard.
+services:
+  - type: web
+    name: career-recommender-api
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    # One worker keeps the 26 MB model within the free tier's 512 MB RAM.
+    # Bind to $PORT/0.0.0.0 because Render routes traffic to that port.
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --timeout 120
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.10
+      # Generated once and kept stable so login tokens stay valid.
+      - key: JWT_SECRET
+        generateValue: true
+      # Secret — paste your MongoDB Atlas connection string in the dashboard.
+      - key: MONGO_URI
+        sync: false

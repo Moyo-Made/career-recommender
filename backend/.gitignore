@@ -1,0 +1,10 @@
+.env
+venv/
+__pycache__/
+
+# Ignore stray pickles, but keep the trained model + encoders the
+# server needs at startup (Render loads these on boot).
+*.pkl
+!career_model.pkl
+!feature_names.pkl
+!label_encoder.pkl

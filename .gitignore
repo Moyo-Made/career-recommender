@@ -1,0 +1,20 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Secrets / local env
+.env
+.env.local
+frontend/.env.local
+
+# Node / frontend build
+node_modules/
+frontend/dist/
+
+# ML pickles are ignored by default, but the backend's trained model
+# MUST be committed so Render can load it at startup.
+*.pkl
+!backend/career_model.pkl
+!backend/feature_names.pkl
+!backend/label_encoder.pkl

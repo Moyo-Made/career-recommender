@@ -1,0 +1,27 @@
+# Core dependencies for the AI-Powered Career Path Recommender (CareerFit)
+# Backend + Machine Learning
+#
+# NOTE: Run `pip freeze > requirements.txt` on your own machine to capture
+# the exact versions installed in your environment. The versions below are
+# indicative; adjust to match your `pip freeze` output if they differ.
+
+# --- Machine Learning ---
+pandas
+numpy
+scikit-learn
+joblib
+
+# --- Visualisation (used during model training) ---
+matplotlib
+seaborn
+
+# --- Backend / API ---
+flask
+flask-cors
+
+# --- Database ---
+pymongo
+python-dotenv
+
+# --- Testing ---
+requests
