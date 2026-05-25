@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
 import { useHistory } from '../context/HistoryContext';
@@ -15,6 +15,17 @@ const SERIES_COLORS = ['#0f2d52', '#1d5fb0', '#c8901e'];
 export default function Dashboard() {
   const { user } = useAuth();
   const { history, loading, error, refresh } = useHistory();
+
+  // Track a mobile breakpoint so the charts can shrink axis labels and
+  // reclaim horizontal space for the bars on narrow screens.
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== 'undefined' && window.innerWidth <= 600
+  );
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth <= 600);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
 
   // Fetch only when the cache is empty; revisits reuse the cached data, so we
   // no longer refetch (and flash a spinner) on every navigation back here.
@@ -117,21 +128,21 @@ export default function Dashboard() {
                 <BarChart
                   data={latestBars}
                   layout="vertical"
-                  margin={{ top: 8, right: 48, bottom: 8, left: 8 }}
+                  margin={{ top: 8, right: isMobile ? 36 : 48, bottom: 8, left: 8 }}
                 >
                   <CartesianGrid horizontal={false} stroke="#eef2f7" />
                   <XAxis
                     type="number"
                     domain={[0, 100]}
                     tickFormatter={(v) => `${v}%`}
-                    tick={{ fill: '#5a6b7f', fontSize: 12 }}
+                    tick={{ fill: '#5a6b7f', fontSize: isMobile ? 11 : 12 }}
                     stroke="#d9e2ec"
                   />
                   <YAxis
                     type="category"
                     dataKey="career"
-                    width={150}
-                    tick={{ fill: '#16202e', fontSize: 13 }}
+                    width={isMobile ? 96 : 150}
+                    tick={{ fill: '#16202e', fontSize: isMobile ? 11 : 13 }}
                     stroke="#d9e2ec"
                   />
                   <Tooltip
