@@ -8,6 +8,8 @@ joblib==1.5.3
 numpy==2.4.6
 scipy==1.17.1
 scikit-learn==1.8.0
+# class_profiles.pkl and feature_stats.pkl are pandas DataFrames; joblib.load needs pandas at runtime.
+pandas==3.0.3
 PyJWT==2.10.1
 # Production WSGI server (Flask's built-in server is dev-only).
 gunicorn==23.0.0
