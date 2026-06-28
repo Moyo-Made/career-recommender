@@ -18,3 +18,5 @@ frontend/dist/
 !backend/career_model.pkl
 !backend/feature_names.pkl
 !backend/label_encoder.pkl
+!backend/class_profiles.pkl
+!backend/feature_stats.pkl

@@ -1,11 +1,11 @@
-// src/pages/Assessment.jsx
-// Progressive, step-based career assessment.
-// Flow: Intro -> 18 interest questions (one at a time, auto-advance)
-//       -> Skills (grouped) -> CGPA -> Analyzing -> Results
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { RIASEC_QUESTIONS, SKILLS, calculateRiasecScores } from '../assessmentData';
+import { RIASEC_QUESTIONS, SKILLS, COURSES, calculateRiasecScores } from '../assessmentData';
+import CourseCombobox from '../components/CourseCombobox';
 import { getRecommendations } from '../api';
+
+// Free text covers "not listed", so the explicit sentinel isn't shown in the list.
+const courseOptions = COURSES.filter((c) => c !== 'Other / Not listed');
 import { useAuth } from '../auth/AuthContext';
 import { useHistory } from '../context/HistoryContext';
 
@@ -18,11 +18,11 @@ const SCALE = [
 ];
 const SKILL_SCALE = [1, 2, 3, 4, 5];
 
-// The "phases" of the assessment
 const PHASE = {
   INTRO: 'intro',
   INTERESTS: 'interests',
   SKILLS: 'skills',
+  COURSE: 'course',
   CGPA: 'cgpa',
   ANALYZING: 'analyzing',
 };
@@ -38,6 +38,7 @@ export default function Assessment() {
 
   const [riasecAnswers, setRiasecAnswers] = useState({});
   const [skillAnswers, setSkillAnswers] = useState({});
+  const [course, setCourse] = useState('');
   const [cgpa, setCgpa] = useState('');
   const [error, setError] = useState('');
 
@@ -64,7 +65,7 @@ export default function Assessment() {
     if (qIndex > 0) {
       setQIndex(qIndex - 1);
     } else {
-      setPhase(PHASE.INTRO);
+      setPhase(PHASE.COURSE);
     }
   }
 
@@ -86,6 +87,7 @@ export default function Assessment() {
       ...riasecScores,
       CGPA: cgpaNum,
       ...skillAnswers,
+      Course: course,
     };
 
     setPhase(PHASE.ANALYZING);
@@ -107,21 +109,16 @@ export default function Assessment() {
     }
   }
 
-  // progress across the whole flow (interests + skills + cgpa)
+
   const answeredInterest = Object.keys(riasecAnswers).length;
   const answeredSkills = Object.keys(skillAnswers).length;
-  const overallAnswered = answeredInterest + answeredSkills + (cgpa !== '' ? 1 : 0);
-  const overallTotal = totalInterest + SKILLS.length + 1;
+  const overallAnswered = answeredInterest + answeredSkills + (course !== '' ? 1 : 0) + (cgpa !== '' ? 1 : 0);
+  const overallTotal = totalInterest + SKILLS.length + 2;
   const overallPct = Math.round((overallAnswered / overallTotal) * 100);
 
-  // =====================================================
-  // RENDER
-  // =====================================================
   return (
     <div className="page">
       <div className="container container-narrow">
-
-        {/* ---------- INTRO ---------- */}
         {phase === PHASE.INTRO && (
           <div className="step-fade">
             <div className="intro-card">
@@ -144,14 +141,12 @@ export default function Assessment() {
                 </div>
               )}
 
-              <button className="btn large" style={{ marginTop: 28, width: '100%' }} onClick={() => setPhase(PHASE.INTERESTS)}>
+              <button className="btn large" style={{ marginTop: 28, width: '100%' }} onClick={() => setPhase(PHASE.COURSE)}>
                 Begin Assessment
               </button>
             </div>
           </div>
         )}
-
-        {/* ---------- INTERESTS (one at a time) ---------- */}
         {phase === PHASE.INTERESTS && (
           <div>
             <div className="step-top">
@@ -178,12 +173,11 @@ export default function Assessment() {
           </div>
         )}
 
-        {/* ---------- SKILLS (grouped) ---------- */}
         {phase === PHASE.SKILLS && (
           <div className="step-fade">
             <div className="step-top">
               <button className="back-link" onClick={() => { setPhase(PHASE.INTERESTS); setQIndex(totalInterest - 1); }}>← Back</button>
-              <span className="step-count">Part 2 of 3 · Skills</span>
+              <span className="step-count">Part 3 of 4 · Skills</span>
             </div>
             <div className="progress big"><div className="bar" style={{ width: `${overallPct}%` }} /></div>
 
@@ -220,12 +214,48 @@ export default function Assessment() {
           </div>
         )}
 
+        {/* ---------- COURSE OF STUDY ---------- */}
+        {phase === PHASE.COURSE && (
+          <div className="step-fade">
+            <div className="step-top">
+              <button className="back-link" onClick={() => setPhase(PHASE.INTRO)}>← Back</button>
+              <span className="step-count">Part 1 of 4 · Course of Study</span>
+            </div>
+            <div className="progress big"><div className="bar" style={{ width: `${overallPct}%` }} /></div>
+
+            <h2 className="step-heading">What did you study?</h2>
+            <p className="step-sub">
+              We use your degree to keep recommendations realistic — so you only see
+              careers you can actually pursue with your qualification.
+            </p>
+
+            <div className="card" style={{ marginTop: 8, padding: '32px' }}>
+              <label className="field-label">Course of study</label>
+              <CourseCombobox
+                options={courseOptions}
+                value={course}
+                onChange={setCourse}
+                placeholder="Type or select your course…"
+              />
+            </div>
+
+            <button
+              className="btn large"
+              style={{ marginTop: 28, width: '100%' }}
+              disabled={course === ''}
+              onClick={() => setPhase(PHASE.INTERESTS)}
+            >
+              {course === '' ? 'Select your course' : 'Continue'}
+            </button>
+          </div>
+        )}
+
         {/* ---------- CGPA ---------- */}
         {phase === PHASE.CGPA && (
           <div className="step-fade">
             <div className="step-top">
               <button className="back-link" onClick={() => setPhase(PHASE.SKILLS)}>← Back</button>
-              <span className="step-count">Part 3 of 3 · Academic</span>
+              <span className="step-count">Part 4 of 4 · Academic</span>
             </div>
             <div className="progress big"><div className="bar" style={{ width: `${overallPct}%` }} /></div>
 
@@ -258,7 +288,7 @@ export default function Assessment() {
           <div className="loading-screen step-fade">
             <div className="spinner" />
             <h2 className="step-heading" style={{ marginTop: 20 }}>Analyzing your profile…</h2>
-            <p className="step-sub">Matching your personality, skills, and academics against 12 career paths.</p>
+            <p className="step-sub">Matching your personality, skills, and academics against 24 career paths.</p>
           </div>
         )}
 

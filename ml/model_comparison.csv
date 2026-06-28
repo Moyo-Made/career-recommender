@@ -1,0 +1,5 @@
+Model,Test Accuracy,Precision,Recall,F1-Score,CV Mean,CV Std
+SVM (RBF),68.72,69.01,68.72,68.68,67.94,1.76
+Logistic Regression,68.59,68.78,68.59,68.57,69.1,1.39
+Gradient Boosting,64.24,64.36,64.24,64.08,63.64,0.72
+Random Forest,63.93,63.83,63.93,63.73,64.74,1.38

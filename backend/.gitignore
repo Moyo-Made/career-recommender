@@ -8,3 +8,5 @@ __pycache__/
 !career_model.pkl
 !feature_names.pkl
 !label_encoder.pkl
+!class_profiles.pkl
+!feature_stats.pkl

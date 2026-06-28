@@ -348,6 +348,88 @@ a {
 	font-size: 0.95rem;
 }
 
+/* ---------- Combobox (searchable course picker) ---------- */
+.combobox {
+	position: relative;
+	width: 100%;
+}
+.combobox-input {
+	width: 100%;
+	padding: 14px 40px 14px 16px;
+	border: 1.5px solid var(--line);
+	border-radius: var(--radius);
+	font-size: 1.05rem;
+	font-family: var(--sans);
+	color: var(--ink);
+	background: var(--white);
+}
+.combobox-input::placeholder {
+	color: var(--slate);
+}
+.combobox-input:focus {
+	outline: none;
+	border-color: var(--blue);
+	box-shadow: 0 0 0 3px var(--blue-light);
+}
+.combobox-chevron {
+	position: absolute;
+	right: 16px;
+	top: 50%;
+	transform: translateY(-50%);
+	color: var(--slate);
+	pointer-events: none;
+	font-size: 0.9rem;
+}
+.combobox-list {
+	position: absolute;
+	top: calc(100% + 6px);
+	left: 0;
+	right: 0;
+	z-index: 20;
+	margin: 0;
+	padding: 6px;
+	list-style: none;
+	background: var(--white);
+	border: 1px solid var(--line);
+	border-radius: var(--radius);
+	box-shadow: var(--shadow-lg);
+	max-height: 280px;
+	overflow-y: auto;
+}
+.combobox-item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 11px 14px;
+	border-radius: 8px;
+	cursor: pointer;
+	color: var(--ink);
+	font-size: 0.98rem;
+}
+.combobox-item.active {
+	background: var(--blue-light);
+}
+.combobox-item.selected {
+	color: var(--blue);
+	font-weight: 600;
+}
+.combobox-item.combobox-other {
+	color: var(--slate);
+	border-top: 1px solid var(--line);
+	margin-top: 4px;
+	border-radius: 0 0 8px 8px;
+}
+.combobox-check {
+	color: var(--blue);
+	font-weight: 700;
+}
+.combobox-empty {
+	padding: 12px 14px;
+	color: var(--slate);
+	font-size: 0.92rem;
+}
+
 .submit-row {
 	margin-top: 40px;
 	display: flex;
@@ -809,6 +891,23 @@ a {
 	background: #fbf2dc;
 	color: var(--gold);
 }
+.match-label.core-label {
+	background: var(--bg);
+	color: var(--slate);
+	border: 1px solid var(--line);
+}
+
+/* The degree's core career: shown for relevance, no fit score. */
+.rec-card.core-path {
+	border-style: dashed;
+	background: var(--bg);
+}
+.core-path-note {
+	color: var(--slate);
+	font-size: 0.9rem;
+	margin-top: 8px;
+	line-height: 1.5;
+}
 
 /* tiny, muted confidence figure sitting under the bar */
 .rec-confidence {
@@ -817,6 +916,31 @@ a {
 	text-align: right;
 	margin-top: 6px;
 	font-family: var(--mono);
+}
+
+.rec-reasons {
+	margin-top: 12px;
+	padding-top: 12px;
+	border-top: 1px dashed var(--line);
+}
+.rec-reasons-title {
+	display: block;
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: var(--blue);
+	margin-bottom: 6px;
+}
+.rec-reasons ul {
+	margin: 0;
+	padding-left: 18px;
+}
+.rec-reasons li {
+	font-size: 0.85rem;
+	color: var(--slate);
+	line-height: 1.5;
+	margin-bottom: 2px;
 }
 
 .results-note {

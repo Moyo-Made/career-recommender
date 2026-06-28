@@ -24,7 +24,10 @@ import pandas as pd
 RANDOM_SEED = 42
 np.random.seed(RANDOM_SEED)
 
-# Samples per career — 335 × 12 = 4,020 total students
+# Samples per career — 335 × 24 = 8,040 total students.
+# The 24 careers are balanced 4-per-RIASEC-type for full coverage of Holland's
+# six interest types (Realistic, Investigative, Artistic, Social, Enterprising,
+# Conventional), and chosen for relevance to Nigerian university graduates.
 SAMPLES_PER_CAREER = 335
 
 # Feature columns
@@ -96,6 +99,33 @@ CAREER_PROFILES = {
                    'Technical': (4.7, 0.4), 'DataAnalysis': (3.5, 0.9), 'PublicSpeaking': (3.0, 1.0),
                    'Research': (3.5, 0.9)}
     },
+    'Electrical/Electronics Engineer': {
+        'riasec': {'Realistic': (8.5, 0.9), 'Investigative': (7.8, 1.1), 'Artistic': (4.0, 1.5),
+                   'Social': (4.0, 1.5), 'Enterprising': (4.8, 1.5), 'Conventional': (5.8, 1.5)},
+        'cgpa': (3.7, 0.5),
+        'skills': {'Programming': (3.5, 1.0), 'Mathematics': (4.4, 0.6), 'ProblemSolving': (4.4, 0.6),
+                   'Communication': (3.2, 0.9), 'Leadership': (3.3, 0.9), 'Creativity': (3.3, 0.9),
+                   'Technical': (4.7, 0.4), 'DataAnalysis': (3.8, 0.8), 'PublicSpeaking': (2.9, 1.0),
+                   'Research': (3.6, 0.9)}
+    },
+    'Agricultural Scientist/Agronomist': {
+        'riasec': {'Realistic': (8.0, 1.1), 'Investigative': (7.5, 1.2), 'Artistic': (4.2, 1.5),
+                   'Social': (5.5, 1.5), 'Enterprising': (4.8, 1.5), 'Conventional': (5.5, 1.5)},
+        'cgpa': (3.6, 0.5),
+        'skills': {'Programming': (2.0, 1.0), 'Mathematics': (3.5, 0.9), 'ProblemSolving': (4.0, 0.7),
+                   'Communication': (3.5, 0.8), 'Leadership': (3.2, 0.9), 'Creativity': (3.2, 0.9),
+                   'Technical': (4.0, 0.7), 'DataAnalysis': (3.8, 0.8), 'PublicSpeaking': (3.0, 1.0),
+                   'Research': (4.4, 0.6)}
+    },
+    'Architect/Urban Planner': {
+        'riasec': {'Realistic': (7.5, 1.2), 'Investigative': (6.0, 1.4), 'Artistic': (8.0, 1.1),
+                   'Social': (4.5, 1.5), 'Enterprising': (5.5, 1.5), 'Conventional': (5.5, 1.5)},
+        'cgpa': (3.5, 0.5),
+        'skills': {'Programming': (3.0, 1.1), 'Mathematics': (3.8, 0.8), 'ProblemSolving': (4.0, 0.7),
+                   'Communication': (3.6, 0.8), 'Leadership': (3.4, 0.9), 'Creativity': (4.4, 0.6),
+                   'Technical': (4.3, 0.6), 'DataAnalysis': (3.2, 0.9), 'PublicSpeaking': (3.3, 0.9),
+                   'Research': (3.6, 0.9)}
+    },
     # ---------- CONVENTIONAL-dominant ----------
     'Accountant/Auditor': {
         'riasec': {'Realistic': (4.5, 1.5), 'Investigative': (6.0, 1.5), 'Artistic': (3.5, 1.3),
@@ -114,6 +144,24 @@ CAREER_PROFILES = {
                    'Communication': (4.2, 0.6), 'Leadership': (3.8, 0.8), 'Creativity': (2.8, 0.9),
                    'Technical': (2.8, 0.9), 'DataAnalysis': (4.5, 0.5), 'PublicSpeaking': (3.8, 0.8),
                    'Research': (3.8, 0.8)}
+    },
+    'Public Administrator/Civil Servant': {
+        'riasec': {'Realistic': (3.5, 1.4), 'Investigative': (5.0, 1.5), 'Artistic': (4.0, 1.5),
+                   'Social': (6.0, 1.4), 'Enterprising': (6.0, 1.4), 'Conventional': (8.3, 1.0)},
+        'cgpa': (3.4, 0.6),
+        'skills': {'Programming': (2.0, 1.0), 'Mathematics': (3.2, 0.9), 'ProblemSolving': (3.6, 0.8),
+                   'Communication': (4.0, 0.7), 'Leadership': (3.6, 0.8), 'Creativity': (2.5, 0.9),
+                   'Technical': (2.5, 0.9), 'DataAnalysis': (3.6, 0.8), 'PublicSpeaking': (3.5, 0.9),
+                   'Research': (3.4, 0.9)}
+    },
+    'Procurement/Supply-Chain Officer': {
+        'riasec': {'Realistic': (4.5, 1.5), 'Investigative': (5.5, 1.5), 'Artistic': (3.5, 1.3),
+                   'Social': (5.0, 1.5), 'Enterprising': (6.5, 1.4), 'Conventional': (8.3, 1.0)},
+        'cgpa': (3.5, 0.5),
+        'skills': {'Programming': (2.5, 1.0), 'Mathematics': (3.8, 0.8), 'ProblemSolving': (4.0, 0.7),
+                   'Communication': (3.8, 0.7), 'Leadership': (3.5, 0.9), 'Creativity': (2.6, 0.9),
+                   'Technical': (3.0, 0.9), 'DataAnalysis': (4.3, 0.6), 'PublicSpeaking': (3.3, 0.9),
+                   'Research': (3.5, 0.9)}
     },
     # ---------- ENTERPRISING-dominant ----------
     'Marketing/Sales Executive': {
@@ -134,6 +182,24 @@ CAREER_PROFILES = {
                    'Technical': (3.0, 1.0), 'DataAnalysis': (3.3, 0.9), 'PublicSpeaking': (4.2, 0.7),
                    'Research': (3.3, 0.9)}
     },
+    'Lawyer/Legal Practitioner': {
+        'riasec': {'Realistic': (3.0, 1.3), 'Investigative': (6.5, 1.4), 'Artistic': (5.0, 1.5),
+                   'Social': (6.5, 1.4), 'Enterprising': (8.0, 1.1), 'Conventional': (6.5, 1.4)},
+        'cgpa': (3.6, 0.5),
+        'skills': {'Programming': (1.8, 0.9), 'Mathematics': (2.8, 1.0), 'ProblemSolving': (4.3, 0.6),
+                   'Communication': (4.6, 0.5), 'Leadership': (4.0, 0.7), 'Creativity': (3.3, 0.9),
+                   'Technical': (2.2, 1.0), 'DataAnalysis': (3.2, 0.9), 'PublicSpeaking': (4.5, 0.5),
+                   'Research': (4.4, 0.6)}
+    },
+    'Project/Operations Manager': {
+        'riasec': {'Realistic': (4.5, 1.5), 'Investigative': (5.5, 1.5), 'Artistic': (4.5, 1.5),
+                   'Social': (6.0, 1.4), 'Enterprising': (8.0, 1.1), 'Conventional': (7.0, 1.3)},
+        'cgpa': (3.5, 0.5),
+        'skills': {'Programming': (2.5, 1.1), 'Mathematics': (3.5, 0.9), 'ProblemSolving': (4.2, 0.6),
+                   'Communication': (4.3, 0.6), 'Leadership': (4.5, 0.5), 'Creativity': (3.2, 0.9),
+                   'Technical': (3.0, 0.9), 'DataAnalysis': (3.8, 0.8), 'PublicSpeaking': (3.8, 0.8),
+                   'Research': (3.4, 0.9)}
+    },
     # ---------- SOCIAL-dominant ----------
     'Human Resources Manager': {
         'riasec': {'Realistic': (3.5, 1.3), 'Investigative': (4.5, 1.5), 'Artistic': (5.0, 1.5),
@@ -153,6 +219,24 @@ CAREER_PROFILES = {
                    'Technical': (2.5, 1.0), 'DataAnalysis': (3.0, 1.0), 'PublicSpeaking': (4.5, 0.5),
                    'Research': (4.0, 0.7)}
     },
+    'Nurse/Healthcare Professional': {
+        'riasec': {'Realistic': (5.5, 1.4), 'Investigative': (6.5, 1.3), 'Artistic': (4.0, 1.5),
+                   'Social': (8.5, 1.0), 'Enterprising': (4.5, 1.5), 'Conventional': (6.0, 1.4)},
+        'cgpa': (3.6, 0.5),
+        'skills': {'Programming': (1.8, 0.9), 'Mathematics': (3.2, 0.9), 'ProblemSolving': (4.0, 0.7),
+                   'Communication': (4.4, 0.5), 'Leadership': (3.5, 0.9), 'Creativity': (2.8, 0.9),
+                   'Technical': (4.0, 0.7), 'DataAnalysis': (3.2, 0.9), 'PublicSpeaking': (3.3, 0.9),
+                   'Research': (3.6, 0.8)}
+    },
+    'Guidance Counsellor/Social Worker': {
+        'riasec': {'Realistic': (3.0, 1.3), 'Investigative': (5.5, 1.5), 'Artistic': (5.0, 1.5),
+                   'Social': (8.8, 0.8), 'Enterprising': (5.0, 1.5), 'Conventional': (5.0, 1.5)},
+        'cgpa': (3.4, 0.6),
+        'skills': {'Programming': (1.6, 0.8), 'Mathematics': (2.5, 1.0), 'ProblemSolving': (3.8, 0.8),
+                   'Communication': (4.6, 0.5), 'Leadership': (3.6, 0.8), 'Creativity': (3.2, 0.9),
+                   'Technical': (2.0, 0.9), 'DataAnalysis': (2.8, 1.0), 'PublicSpeaking': (4.0, 0.7),
+                   'Research': (3.6, 0.8)}
+    },
     # ---------- ARTISTIC-dominant ----------
     'Graphic Designer/UI-UX': {
         'riasec': {'Realistic': (4.5, 1.5), 'Investigative': (5.0, 1.5), 'Artistic': (8.8, 0.8),
@@ -162,6 +246,33 @@ CAREER_PROFILES = {
                    'Communication': (4.0, 0.8), 'Leadership': (3.0, 1.0), 'Creativity': (4.8, 0.3),
                    'Technical': (3.5, 0.9), 'DataAnalysis': (2.8, 1.0), 'PublicSpeaking': (3.3, 0.9),
                    'Research': (3.3, 0.9)}
+    },
+    'Content Writer/Journalist': {
+        'riasec': {'Realistic': (3.0, 1.3), 'Investigative': (5.5, 1.5), 'Artistic': (8.5, 1.0),
+                   'Social': (6.0, 1.4), 'Enterprising': (5.5, 1.5), 'Conventional': (4.5, 1.5)},
+        'cgpa': (3.4, 0.6),
+        'skills': {'Programming': (1.8, 0.9), 'Mathematics': (2.5, 1.0), 'ProblemSolving': (3.6, 0.9),
+                   'Communication': (4.7, 0.4), 'Leadership': (3.2, 0.9), 'Creativity': (4.4, 0.6),
+                   'Technical': (2.2, 1.0), 'DataAnalysis': (2.8, 1.0), 'PublicSpeaking': (3.8, 0.8),
+                   'Research': (4.2, 0.6)}
+    },
+    'Film/Multimedia Producer': {
+        'riasec': {'Realistic': (4.5, 1.5), 'Investigative': (4.8, 1.5), 'Artistic': (8.5, 1.0),
+                   'Social': (5.5, 1.5), 'Enterprising': (7.0, 1.3), 'Conventional': (4.5, 1.5)},
+        'cgpa': (3.2, 0.6),
+        'skills': {'Programming': (2.5, 1.1), 'Mathematics': (2.5, 1.0), 'ProblemSolving': (3.8, 0.8),
+                   'Communication': (4.2, 0.6), 'Leadership': (4.0, 0.7), 'Creativity': (4.6, 0.5),
+                   'Technical': (3.5, 0.9), 'DataAnalysis': (2.8, 1.0), 'PublicSpeaking': (3.8, 0.8),
+                   'Research': (3.2, 0.9)}
+    },
+    'Fashion Designer': {
+        'riasec': {'Realistic': (4.5, 1.5), 'Investigative': (4.0, 1.5), 'Artistic': (8.8, 0.8),
+                   'Social': (5.0, 1.5), 'Enterprising': (6.5, 1.4), 'Conventional': (4.5, 1.5)},
+        'cgpa': (3.1, 0.6),
+        'skills': {'Programming': (1.6, 0.8), 'Mathematics': (2.3, 1.0), 'ProblemSolving': (3.5, 0.9),
+                   'Communication': (3.8, 0.8), 'Leadership': (3.5, 0.9), 'Creativity': (4.8, 0.3),
+                   'Technical': (3.5, 0.9), 'DataAnalysis': (2.5, 1.0), 'PublicSpeaking': (3.2, 0.9),
+                   'Research': (2.8, 0.9)}
     },
 }
 

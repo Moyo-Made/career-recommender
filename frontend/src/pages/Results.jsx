@@ -1,11 +1,8 @@
-// src/pages/Results.jsx
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
 
-// ---------------------------------------------------------------
-// Confidence labels based on SEPARATION from the top match,
-// not fixed thresholds (because probabilities span 12 classes).
-// ---------------------------------------------------------------
+// Labels reflect each match's separation from the top match, not fixed
+// thresholds (probabilities are spread thin across 24 classes).
 function getConfidenceLabel(rank, pct, topPct) {
   if (rank === 0) return 'Strongest match';
   const ratio = pct / topPct;
@@ -45,7 +42,7 @@ export default function Results() {
           <div className="eyebrow">Your Results</div>
           <h1>{name && name !== 'Anonymous' ? `${name}, here are your top matches` : 'Your top career matches'}</h1>
           <p style={{ color: '#5a6b7f' }}>
-            Based on your personality, academic performance, and skills.
+            Based on your course of study, personality, academic performance, and skills.
           </p>
         </div>
 
@@ -62,8 +59,28 @@ export default function Results() {
         )}
 
         {recs.map((rec, idx) => {
+          // The degree's main career, shown because of the field of study even
+          // when the student's interests rank it low — labelled, not scored.
+          if (rec.core_path) {
+            return (
+              <div className="rec-card core-path" key={rec.career}>
+                <div className="rec-rank">{idx + 1}</div>
+                <div className="rec-body">
+                  <div className="rec-title-row">
+                    <h3>{rec.career}</h3>
+                    <span className="match-label core-label">Core path for your degree</span>
+                  </div>
+                  <p className="core-path-note">
+                    Always shown because it's the main career for your field of study —
+                    your interests point more strongly to the matches above.
+                  </p>
+                </div>
+              </div>
+            );
+          }
+
           const label = getConfidenceLabel(idx, rec.match_percentage, topPct);
-          const barWidth = Math.round((rec.match_percentage / topPct) * 100);
+          const barWidth = Math.round(rec.match_percentage);
           return (
             <div className={`rec-card ${idx === 0 ? 'top' : ''}`} key={rec.career}>
               <div className="rec-rank">{idx + 1}</div>
@@ -75,15 +92,25 @@ export default function Results() {
                 <div className="match-bar">
                   <div className="fill" style={{ width: `${barWidth}%` }} />
                 </div>
-                <div className="rec-confidence">confidence {rec.match_percentage}%</div>
+                <div className="rec-confidence">{rec.match_percentage}% match</div>
+                {rec.reasons && rec.reasons.length > 0 && (
+                  <div className="rec-reasons">
+                    <span className="rec-reasons-title">Why this fits you</span>
+                    <ul>
+                      {rec.reasons.map((reason, i) => (
+                        <li key={i}>{reason}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             </div>
           );
         })}
 
         <p className="results-note">
-          The bars show how your top matches compare to one another. Matches are ranked
-          from a set of 12 career categories.
+          Match scores are a relative fit, drawn from your interests, skills and course of
+          study across the careers your degree can lead to — a guide, not an exact probability.
         </p>
 
         <div className="results-actions">
